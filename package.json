@@ -1,0 +1,17 @@
+{
+    "name": "shftjs",
+    "version": "0.0.1",
+    "description": "Minimal, functional library for drag and drop operations.",
+    "main": "index.js",
+    "module": "index.js",
+    "scripts": {
+        "build": "tsc && npx webpack",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+        "dts-bundle-webpack": "^1.0.2",
+        "ts-loader": "^6.2.1"
+    }
+}

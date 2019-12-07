@@ -1,0 +1,17 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "module": "es2015",
+        "sourceMap": true,
+        "target": "es2016",
+        "lib": ["es2016", "dom"],
+        "moduleResolution": "node",
+        "allowUmdGlobalAccess": true,
+        "experimentalDecorators": true,
+        "outDir": "./src",
+        "allowJs": false,
+        "declaration": true
+    },
+    "include": ["./ts/**/*"],
+    "exclude": ["node_modules"]
+}

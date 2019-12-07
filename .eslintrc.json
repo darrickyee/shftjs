@@ -1,0 +1,8 @@
+{
+    "parserOptions": { "ecmaVersion": 2015, "sourceType": "module" },
+    "rules": { "no-use-before-define": "error" },
+    "env": {
+        "browser": true,
+        "es6": true
+    }
+}
