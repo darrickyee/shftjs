@@ -35,15 +35,15 @@ const EVENTINIT_KEYS = [
  * @param e
  * @param overrides
  */
-export function _eventInit(e, overrides = {}) {
-    const eventInit = {};
+export function eventInit(e, overrides = {}) {
+    const init = {};
     EVENTINIT_KEYS.forEach(key => {
-        eventInit[key] = e[key];
+        init[key] = e[key];
     });
-    return Object.assign(eventInit, overrides);
+    return Object.assign(init, overrides);
 }
 /**
- * Constructs and dispatches a custom `MouseEvent` with property `moveTarget` set to `element`.
+ * Constructs and dispatches a custom `MouseEvent` with property `shftTarget` set to `element`.
  * @param element
  * @param typeArg
  * @param options
@@ -51,7 +51,7 @@ export function _eventInit(e, overrides = {}) {
  */
 export function dispatch(element, typeArg, options = {}) {
     const ev = new MouseEvent(typeArg, options);
-    ev.moveTarget = element;
+    ev.shftTarget = element;
     element.dispatchEvent(ev);
     return ev;
 }

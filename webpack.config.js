@@ -8,7 +8,7 @@ module.exports = {
         rules: [{ use: 'ts-loader', exclude: /node_modules/ }]
     },
     resolve: {
-        extensions: ['.ts', '.js']
+        extensions: ['.ts']
     },
     output: {
         filename: 'index.js',

@@ -1,8 +1,9 @@
 import { drag } from './drag';
 import { drop } from './drop';
 import { is, matches, clear } from './util';
+import { _GLOBAL, DragData, DropData } from './core';
 
-function defaultmove(e: DragEvent): void {
+function defaultmove(e: MouseEvent): void {
     const el = e.target as HTMLElement;
     if (!['absolute', 'relative'].includes(el.style.position))
         el.style.position = 'relative';
@@ -17,5 +18,6 @@ function defaultmove(e: DragEvent): void {
 export default {
     drag,
     drop,
-    util: { clear, defaultmove, is, matches }
+    util: { clear, defaultmove, is, matches },
+    _GLOBAL
 };

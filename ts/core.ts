@@ -4,7 +4,6 @@ type ShftJsData = {
     drags: WeakMap<Element, DragData>;
     drops: WeakMap<Element, DropData>;
 };
-
 export interface DragData {
     onmousedown: (ev: MouseEvent) => any;
     onmousemove: (ev: MouseEvent) => any;
@@ -59,7 +58,7 @@ const EVENTINIT_KEYS = [
 ];
 
 export interface ShftEvent extends MouseEvent {
-    moveTarget?: Element;
+    shftTarget?: Element;
 }
 
 /**
@@ -67,17 +66,20 @@ export interface ShftEvent extends MouseEvent {
  * @param e
  * @param overrides
  */
-export function _eventInit(e: MouseEvent, overrides: object = {}): MouseEventInit {
-    const eventInit = {};
+export function eventInit(
+    e: MouseEvent,
+    overrides: object = {}
+): MouseEventInit {
+    const init = {};
     EVENTINIT_KEYS.forEach(key => {
-        eventInit[key] = e[key];
+        init[key] = e[key];
     });
 
-    return Object.assign(eventInit, overrides);
+    return Object.assign(init, overrides);
 }
 
 /**
- * Constructs and dispatches a custom `MouseEvent` with property `moveTarget` set to `element`.
+ * Constructs and dispatches a custom `MouseEvent` with property `shftTarget` set to `element`.
  * @param element
  * @param typeArg
  * @param options
@@ -89,7 +91,7 @@ export function dispatch(
     options: MouseEventInit = {}
 ): MouseEvent {
     const ev = new MouseEvent(typeArg, options) as ShftEvent;
-    ev.moveTarget = element;
+    ev.shftTarget = element;
     element.dispatchEvent(ev);
     return ev;
 }

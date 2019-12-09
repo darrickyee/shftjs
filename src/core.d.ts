@@ -17,16 +17,16 @@ export interface DropData {
 }
 export declare const _GLOBAL: ShftJsData;
 export interface ShftEvent extends MouseEvent {
-    moveTarget?: Element;
+    shftTarget?: Element;
 }
 /**
  * Copies and returns `MouseEventInit` properties from an existing `MouseEvent`.
  * @param e
  * @param overrides
  */
-export declare function _eventInit(e: MouseEvent, overrides?: object): MouseEventInit;
+export declare function eventInit(e: MouseEvent, overrides?: object): MouseEventInit;
 /**
- * Constructs and dispatches a custom `MouseEvent` with property `moveTarget` set to `element`.
+ * Constructs and dispatches a custom `MouseEvent` with property `shftTarget` set to `element`.
  * @param element
  * @param typeArg
  * @param options

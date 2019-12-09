@@ -1,6 +1,7 @@
 import { drag } from './drag';
 import { drop } from './drop';
 import { is, matches, clear } from './util';
+import { _GLOBAL } from './core';
 function defaultmove(e) {
     const el = e.target;
     if (!['absolute', 'relative'].includes(el.style.position))
@@ -14,6 +15,7 @@ function defaultmove(e) {
 export default {
     drag,
     drop,
-    util: { clear, defaultmove, is, matches }
+    util: { clear, defaultmove, is, matches },
+    _GLOBAL
 };
 //# sourceMappingURL=shft.js.map

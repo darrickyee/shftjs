@@ -131,13 +131,13 @@ module.exports = g;
 /*!********************!*\
   !*** ./ts/core.ts ***!
   \********************/
-/*! exports provided: _GLOBAL, _eventInit, dispatch */
+/*! exports provided: _GLOBAL, eventInit, dispatch */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_GLOBAL", function() { return _GLOBAL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_eventInit", function() { return _eventInit; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eventInit", function() { return eventInit; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dispatch", function() { return dispatch; });
 const _GLOBAL = (function _init(obj) {
     const data = obj._MOVEJS || {};
@@ -176,15 +176,15 @@ const EVENTINIT_KEYS = [
  * @param e
  * @param overrides
  */
-function _eventInit(e, overrides = {}) {
-    const eventInit = {};
+function eventInit(e, overrides = {}) {
+    const init = {};
     EVENTINIT_KEYS.forEach(key => {
-        eventInit[key] = e[key];
+        init[key] = e[key];
     });
-    return Object.assign(eventInit, overrides);
+    return Object.assign(init, overrides);
 }
 /**
- * Constructs and dispatches a custom `MouseEvent` with property `moveTarget` set to `element`.
+ * Constructs and dispatches a custom `MouseEvent` with property `shftTarget` set to `element`.
  * @param element
  * @param typeArg
  * @param options
@@ -192,7 +192,7 @@ function _eventInit(e, overrides = {}) {
  */
 function dispatch(element, typeArg, options = {}) {
     const ev = new MouseEvent(typeArg, options);
-    ev.moveTarget = element;
+    ev.shftTarget = element;
     element.dispatchEvent(ev);
     return ev;
 }
@@ -231,21 +231,23 @@ function _mousedownFn(el) {
     return (e) => {
         const { onmousemove, onmouseup } = drags.get(el);
         if (e.buttons === 1) {
-            Object(_core__WEBPACK_IMPORTED_MODULE_0__["dispatch"])(el, 'dragstart', Object(_core__WEBPACK_IMPORTED_MODULE_0__["_eventInit"])(e));
+            Object(_core__WEBPACK_IMPORTED_MODULE_0__["dispatch"])(el, 'dragstart', Object(_core__WEBPACK_IMPORTED_MODULE_0__["eventInit"])(e));
             document.addEventListener('mousemove', onmousemove);
-            document.addEventListener('mouseup', onmouseup, { once: true });
+            document.addEventListener('mouseup', onmouseup, {
+                once: true
+            });
         }
     };
 }
 function _mousemoveFn(el) {
     return (e) => {
-        Object(_core__WEBPACK_IMPORTED_MODULE_0__["dispatch"])(el, 'drag', Object(_core__WEBPACK_IMPORTED_MODULE_0__["_eventInit"])(e));
+        Object(_core__WEBPACK_IMPORTED_MODULE_0__["dispatch"])(el, 'drag', Object(_core__WEBPACK_IMPORTED_MODULE_0__["eventInit"])(e));
     };
 }
 function _mouseupFn(el) {
     return (e) => {
         const { onmousemove } = drags.get(el);
-        Object(_core__WEBPACK_IMPORTED_MODULE_0__["dispatch"])(el, 'dragend', Object(_core__WEBPACK_IMPORTED_MODULE_0__["_eventInit"])(e));
+        Object(_core__WEBPACK_IMPORTED_MODULE_0__["dispatch"])(el, 'dragend', Object(_core__WEBPACK_IMPORTED_MODULE_0__["eventInit"])(e));
         document.removeEventListener('mousemove', onmousemove);
     };
 }
@@ -287,31 +289,31 @@ function _dragstartFn(el) {
     return (e) => {
         if (!drops.has(el))
             return;
-        const dragged = e.moveTarget;
+        const dragged = e.shftTarget;
         const { accepts, ondrag, ondragend } = drops.get(el);
         if (Object(_util__WEBPACK_IMPORTED_MODULE_1__["matches"])(dragged, accepts)) {
             Object(_core__WEBPACK_IMPORTED_MODULE_0__["dispatch"])(el, 'dropopen', { relatedTarget: dragged });
-            document.addEventListener('drag', ondrag);
-            document.addEventListener('dragend', ondragend, { once: true });
+            dragged.addEventListener('drag', ondrag);
+            dragged.addEventListener('dragend', ondragend, { once: true });
         }
     };
 }
 function _dragFn(el) {
     return (e) => {
-        const dragged = e.moveTarget;
+        const dragged = e.shftTarget;
         const { accepts, content } = drops.get(el);
         if (Object(_util__WEBPACK_IMPORTED_MODULE_1__["matches"])(dragged, accepts)) {
             if (Object(_util__WEBPACK_IMPORTED_MODULE_1__["canDrop"])(el, dragged)) {
                 if (!content.has(dragged)) {
                     content.add(dragged);
-                    Object(_core__WEBPACK_IMPORTED_MODULE_0__["dispatch"])(el, 'dragenter', Object(_core__WEBPACK_IMPORTED_MODULE_0__["_eventInit"])(e, { relatedTarget: dragged }));
+                    Object(_core__WEBPACK_IMPORTED_MODULE_0__["dispatch"])(el, 'dragenter', Object(_core__WEBPACK_IMPORTED_MODULE_0__["eventInit"])(e, { relatedTarget: dragged }));
                 }
-                Object(_core__WEBPACK_IMPORTED_MODULE_0__["dispatch"])(el, 'dragover', Object(_core__WEBPACK_IMPORTED_MODULE_0__["_eventInit"])(e, { relatedTarget: dragged }));
+                Object(_core__WEBPACK_IMPORTED_MODULE_0__["dispatch"])(el, 'dragover', Object(_core__WEBPACK_IMPORTED_MODULE_0__["eventInit"])(e, { relatedTarget: dragged }));
             }
             else {
                 if (content.has(dragged)) {
                     content.delete(dragged);
-                    Object(_core__WEBPACK_IMPORTED_MODULE_0__["dispatch"])(el, 'dragleave', Object(_core__WEBPACK_IMPORTED_MODULE_0__["_eventInit"])(e, { relatedTarget: dragged }));
+                    Object(_core__WEBPACK_IMPORTED_MODULE_0__["dispatch"])(el, 'dragleave', Object(_core__WEBPACK_IMPORTED_MODULE_0__["eventInit"])(e, { relatedTarget: dragged }));
                 }
             }
         }
@@ -319,12 +321,12 @@ function _dragFn(el) {
 }
 function _dragendFn(el) {
     return (e) => {
-        const dragged = e.moveTarget;
+        const dragged = e.shftTarget;
         const { ondrag } = drops.get(el);
-        Object(_core__WEBPACK_IMPORTED_MODULE_0__["dispatch"])(el, 'dropclose', Object(_core__WEBPACK_IMPORTED_MODULE_0__["_eventInit"])(e, { relatedTarget: dragged }));
-        document.removeEventListener('drag', ondrag);
+        Object(_core__WEBPACK_IMPORTED_MODULE_0__["dispatch"])(el, 'dropclose', Object(_core__WEBPACK_IMPORTED_MODULE_0__["eventInit"])(e, { relatedTarget: dragged }));
+        dragged.removeEventListener('drag', ondrag);
         if (Object(_util__WEBPACK_IMPORTED_MODULE_1__["canDrop"])(el, dragged)) {
-            Object(_core__WEBPACK_IMPORTED_MODULE_0__["dispatch"])(el, 'drop', Object(_core__WEBPACK_IMPORTED_MODULE_0__["_eventInit"])(e, { relatedTarget: dragged }));
+            Object(_core__WEBPACK_IMPORTED_MODULE_0__["dispatch"])(el, 'drop', Object(_core__WEBPACK_IMPORTED_MODULE_0__["eventInit"])(e, { relatedTarget: dragged }));
         }
     };
 }
@@ -344,6 +346,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _drag__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./drag */ "./ts/drag.ts");
 /* harmony import */ var _drop__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./drop */ "./ts/drop.ts");
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./util */ "./ts/util.ts");
+/* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./core */ "./ts/core.ts");
+
 
 
 
@@ -360,7 +364,8 @@ function defaultmove(e) {
 /* harmony default export */ __webpack_exports__["default"] = ({
     drag: _drag__WEBPACK_IMPORTED_MODULE_0__["drag"],
     drop: _drop__WEBPACK_IMPORTED_MODULE_1__["drop"],
-    util: { clear: _util__WEBPACK_IMPORTED_MODULE_2__["clear"], defaultmove, is: _util__WEBPACK_IMPORTED_MODULE_2__["is"], matches: _util__WEBPACK_IMPORTED_MODULE_2__["matches"] }
+    util: { clear: _util__WEBPACK_IMPORTED_MODULE_2__["clear"], defaultmove, is: _util__WEBPACK_IMPORTED_MODULE_2__["is"], matches: _util__WEBPACK_IMPORTED_MODULE_2__["matches"] },
+    _GLOBAL: _core__WEBPACK_IMPORTED_MODULE_3__["_GLOBAL"]
 });
 
 
