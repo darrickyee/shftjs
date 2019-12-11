@@ -36,7 +36,10 @@ export function overlapPct(el: Element, other: Element) {
     return (overlapW * overlapH) / (w * h);
 }
 
-export function is(el: Element, type?: 'drag' | 'drop' | 'draggable' | 'droppable' | null) {
+export function is(
+    el: Element,
+    type?: 'drag' | 'drop' | 'draggable' | 'droppable' | null
+) {
     const { drags, drops } = _GLOBAL;
     switch (type) {
         case 'drag':
@@ -72,5 +75,11 @@ export function clear(el) {
 
 export function canDrop(droppable: Element, dragged: Element) {
     const { accepts, overlap } = drops.get(droppable);
-    return matches(dragged, accepts) && overlapPct(dragged, droppable) > overlap;
+    return (
+        matches(dragged, accepts) && overlapPct(dragged, droppable) > overlap
+    );
+}
+
+export function _chain(...fns: Function[]) {
+    return arg => fns.reduce((result, fn) => fn(result), arg);
 }
