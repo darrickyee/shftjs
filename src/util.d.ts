@@ -4,3 +4,4 @@ export declare function overlapPct(el: Element, other: Element): number;
 export declare function is(el: Element, type?: 'drag' | 'drop' | 'draggable' | 'droppable' | null): boolean;
 export declare function clear(el: any): void;
 export declare function canDrop(droppable: Element, dragged: Element): boolean;
+export declare function _chain(...fns: Function[]): (arg: any) => any;

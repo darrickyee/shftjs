@@ -51,6 +51,9 @@ export function clear(el) {
 }
 export function canDrop(droppable, dragged) {
     const { accepts, overlap } = drops.get(droppable);
-    return matches(dragged, accepts) && overlapPct(dragged, droppable) > overlap;
+    return (matches(dragged, accepts) && overlapPct(dragged, droppable) > overlap);
+}
+export function _chain(...fns) {
+    return arg => fns.reduce((result, fn) => fn(result), arg);
 }
 //# sourceMappingURL=util.js.map

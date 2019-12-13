@@ -41,6 +41,7 @@ declare module 'shftjs/util' {
     export function is(el: Element, type?: 'drag' | 'drop' | 'draggable' | 'droppable' | null): boolean;
     export function clear(el: any): void;
     export function canDrop(droppable: Element, dragged: Element): boolean;
+    export function _chain(...fns: Function[]): (arg: any) => any;
 }
 
 declare module 'shftjs/core' {

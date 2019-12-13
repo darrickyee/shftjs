@@ -20,13 +20,13 @@ export interface DropData {
 }
 
 export const _GLOBAL: ShftJsData = (function _init(obj) {
-    const data = obj._MOVEJS || {};
+    const data = obj._SHFTJS || {};
 
     ['drags', 'drops'].forEach(type => {
         if (!data[type]) data[type] = new WeakMap();
     });
 
-    return (obj._MOVEJS = data);
+    return (obj._SHFTJS = data);
 })(global);
 
 const EVENTINIT_KEYS = [

@@ -96,7 +96,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ({
 
-/***/ "../../../AppData/Roaming/npm/node_modules/webpack/buildin/global.js":
+/***/ "../../../../../Program Files/nodejs/node_modules/webpack/buildin/global.js":
 /*!***********************************!*\
   !*** (webpack)/buildin/global.js ***!
   \***********************************/
@@ -140,12 +140,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eventInit", function() { return eventInit; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dispatch", function() { return dispatch; });
 const _GLOBAL = (function _init(obj) {
-    const data = obj._MOVEJS || {};
+    const data = obj._SHFTJS || {};
     ['drags', 'drops'].forEach(type => {
         if (!data[type])
             data[type] = new WeakMap();
     });
-    return (obj._MOVEJS = data);
+    return (obj._SHFTJS = data);
 })(global);
 const EVENTINIT_KEYS = [
     /* EventInit */
@@ -197,7 +197,7 @@ function dispatch(element, typeArg, options = {}) {
     return ev;
 }
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../AppData/Roaming/npm/node_modules/webpack/buildin/global.js */ "../../../AppData/Roaming/npm/node_modules/webpack/buildin/global.js")))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../../Program Files/nodejs/node_modules/webpack/buildin/global.js */ "../../../../../Program Files/nodejs/node_modules/webpack/buildin/global.js")))
 
 /***/ }),
 
@@ -375,7 +375,7 @@ function defaultmove(e) {
 /*!********************!*\
   !*** ./ts/util.ts ***!
   \********************/
-/*! exports provided: clamp, matches, overlapPct, is, clear, canDrop */
+/*! exports provided: clamp, matches, overlapPct, is, clear, canDrop, _chain */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -386,6 +386,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "is", function() { return is; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clear", function() { return clear; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "canDrop", function() { return canDrop; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_chain", function() { return _chain; });
 /* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./core */ "./ts/core.ts");
 
 const { drags, drops } = _core__WEBPACK_IMPORTED_MODULE_0__["_GLOBAL"];
@@ -440,7 +441,10 @@ function clear(el) {
 }
 function canDrop(droppable, dragged) {
     const { accepts, overlap } = drops.get(droppable);
-    return matches(dragged, accepts) && overlapPct(dragged, droppable) > overlap;
+    return (matches(dragged, accepts) && overlapPct(dragged, droppable) > overlap);
+}
+function _chain(...fns) {
+    return arg => fns.reduce((result, fn) => fn(result), arg);
 }
 
 
