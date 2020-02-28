@@ -16,7 +16,7 @@ module.exports = {
         library: 'shftjs',
         libraryTarget: 'umd'
     },
-    mode: 'development',
+    mode: 'production',
     devtool: 'source-map',
     plugins: [
         new DtsBundleWebpack({
