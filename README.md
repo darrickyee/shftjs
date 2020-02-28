@@ -1,7 +1,7 @@
 # shftjs
 index.html:
 
-````
+```html
 <!DOCTYPE html>
 <html>
     <head>
@@ -15,11 +15,11 @@ index.html:
         <script src="script.js"></script>
     </body>
 </html>
-````
+```
 
 script.js:
 
-````
+```js
 import shft from 'shftjs';
 const { drag, util } = shft;
 
@@ -28,4 +28,4 @@ drag(myelem);
 
 // Add default movement function
 myelem.addEventListener('drag', util.defaultmove);
-````
+```
