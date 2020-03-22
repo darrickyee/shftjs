@@ -12,7 +12,7 @@
   "license": "MIT",
   "devDependencies": {
     "dts-bundle-webpack": "^1.0.2",
-    "ts-loader": "^6.2.1",
+    "ts-loader": "^6.2.2",
     "typescript": "^3.8.3"
   },
   "repository": {
