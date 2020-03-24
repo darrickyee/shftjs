@@ -1,6 +1,5 @@
 import resolve from '@rollup/plugin-node-resolve';
 import dts from 'rollup-plugin-dts';
-import { terser } from 'rollup-plugin-terser';
 
 export default [
     {
@@ -10,14 +9,6 @@ export default [
             format: 'module'
         },
         plugins: [resolve()]
-    },
-    {
-        input: './src/shft.js',
-        output: {
-            file: 'index.min.js',
-            format: 'module'
-        },
-        plugins: [resolve(), terser()]
     },
     {
         input: './src/shft.d.ts',
