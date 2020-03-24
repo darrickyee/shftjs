@@ -4,7 +4,7 @@ import { is, matches, clear } from './util';
 import { _GLOBAL } from './core';
 function defaultmove(e) {
     const el = e.target;
-    if (!['absolute', 'relative'].includes(el.style.position))
+    if (!['absolute', 'relative'].some(pos => pos === el.style.position))
         el.style.position = 'relative';
     ['left', 'top'].forEach(axis => {
         let pos = parseFloat(el.style[axis]) || 0;

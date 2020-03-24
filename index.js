@@ -1,2 +1,228 @@
-!function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t():"function"==typeof define&&define.amd?define([],t):"object"==typeof exports?exports.shftjs=t():e.shftjs=t()}(window,(function(){return function(e){var t={};function n(o){if(t[o])return t[o].exports;var r=t[o]={i:o,l:!1,exports:{}};return e[o].call(r.exports,r,r.exports,n),r.l=!0,r.exports}return n.m=e,n.c=t,n.d=function(e,t,o){n.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:o})},n.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},n.t=function(e,t){if(1&t&&(e=n(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var o=Object.create(null);if(n.r(o),Object.defineProperty(o,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var r in e)n.d(o,r,function(t){return e[t]}.bind(null,r));return o},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p="",n(n.s=2)}([function(e,t,n){"use strict";(function(e){n.d(t,"a",(function(){return o})),n.d(t,"c",(function(){return c})),n.d(t,"b",(function(){return a}));const o=function(e){const t=e._SHFTJS||{};return["drags","drops"].forEach(e=>{t[e]||(t[e]=new WeakMap)}),e._SHFTJS=t}(e),r=["bubbles","cancelable","composed","detail","view","altKey","ctrlKey","metaKey","shiftKey","button","buttons","clientX","clientY","movementX","movementY","relatedTarget","screenX","screenY"];function c(e,t={}){const n={};return r.forEach(t=>{n[t]=e[t]}),Object.assign(n,t)}function a(e,t,n={}){const o=new MouseEvent(t,n);return o.shftTarget=e,e.dispatchEvent(o),o}}).call(this,n(1))},function(e,t){var n;n=function(){return this}();try{n=n||new Function("return this")()}catch(e){"object"==typeof window&&(n=window)}e.exports=n},function(e,t,n){"use strict";n.r(t);var o=n(0);const{drags:r,drops:c}=o.a;function a(e,t=0,n=1){return Math.max(t,Math.min(e,n))}function s(e,t){return!t||("string"==typeof t&&(t=[t]),t instanceof Array&&t.some(t=>e.matches(t)))}function u(e,t){const{drags:n,drops:r}=o.a;switch(t){case"drag":case"draggable":return n.has(e);case"drop":case"droppable":return r.has(e);default:return n.has(e)||r.has(e)}}function d(e,t){const{accepts:n,overlap:o}=c.get(e);return s(t,n)&&function(e,t){const{left:n,right:o,top:r,bottom:c,height:s,width:u}=e.getBoundingClientRect(),{left:d,right:i,top:f,bottom:l}=t.getBoundingClientRect();return a(Math.min(o,i)-Math.max(n,d),0,u)*a(Math.min(c,l)-Math.max(r,f),0,s)/(u*s)}(t,e)>o}const{drags:i}=o.a;function f(e){return t=>{const{onmousemove:n,onmouseup:r}=i.get(e);1===t.buttons&&(Object(o.b)(e,"dragstart",Object(o.c)(t)),document.addEventListener("mousemove",n),document.addEventListener("mouseup",r,{once:!0}))}}function l(e){return t=>{Object(o.b)(e,"drag",Object(o.c)(t))}}function m(e){return t=>{const{onmousemove:n}=i.get(e);Object(o.b)(e,"dragend",Object(o.c)(t)),document.removeEventListener("mousemove",n)}}const{drops:g}=o.a;function p(e){return t=>{if(!g.has(e))return;const n=t.shftTarget,{accepts:r,ondrag:c,ondragend:a}=g.get(e);s(n,r)&&(Object(o.b)(e,"dropopen",{relatedTarget:n}),n.addEventListener("drag",c),n.addEventListener("dragend",a,{once:!0}))}}function b(e){return t=>{const n=t.shftTarget,{accepts:r,content:c}=g.get(e);s(n,r)&&(d(e,n)?(c.has(n)||(c.add(n),Object(o.b)(e,"dragenter",Object(o.c)(t,{relatedTarget:n}))),Object(o.b)(e,"dragover",Object(o.c)(t,{relatedTarget:n}))):c.has(n)&&(c.delete(n),Object(o.b)(e,"dragleave",Object(o.c)(t,{relatedTarget:n}))))}}function v(e){return t=>{const n=t.shftTarget,{ondrag:r}=g.get(e);Object(o.b)(e,"dropclose",Object(o.c)(t,{relatedTarget:n})),n.removeEventListener("drag",r),d(e,n)&&Object(o.b)(e,"drop",Object(o.c)(t,{relatedTarget:n}))}}t.default={drag:function(e){if(u(e,"drag"))return;const t={onmousedown:f(e),onmousemove:l(e),onmouseup:m(e)};e.addEventListener("mousedown",t.onmousedown),i.set(e,t)},drop:function(e,t){if(u(e,"drop"))return;const{accepts:n,overlap:o}=Object.assign({accepts:null,overlap:.5},t||{}),r={content:new WeakSet,ondragstart:p(e),ondrag:b(e),ondragend:v(e),accepts:n,overlap:o};document.addEventListener("dragstart",r.ondragstart),g.set(e,r)},util:{clear:function(e){const{drags:t,drops:n}=o.a;if(t.has(e)){const{onmousedown:n,onmousemove:o,onmouseup:r}=t.get(e);e.removeEventListener("mousedown",n),document.removeEventListener("mousemove",o),document.removeEventListener("mouseup",r)}if(n.has(e)){const{ondragstart:t,ondrag:o,ondragend:r}=n.get(e);document.removeEventListener("dragstart",t),document.removeEventListener("drag",o),document.removeEventListener("dragend",r)}},defaultmove:function(e){const t=e.target;["absolute","relative"].includes(t.style.position)||(t.style.position="relative"),["left","top"].forEach(n=>{let o=parseFloat(t.style[n])||0;o+="left"===n?e.movementX:e.movementY,t.style[n]=`${o}px`})},is:u,matches:s},_GLOBAL:o.a}}])}));
-//# sourceMappingURL=index.js.map
+const _GLOBAL = (function _init(obj) {
+    const data = obj._SHFTJS || {};
+    ['drags', 'drops'].forEach(type => {
+        if (!data[type])
+            data[type] = new WeakMap();
+    });
+    return (obj._SHFTJS = data);
+})(global);
+const EVENTINIT_KEYS = [
+    /* EventInit */
+    'bubbles',
+    'cancelable',
+    'composed',
+    /* UiEventInit */
+    'detail',
+    'view',
+    /* EventModifierInit */
+    'altKey',
+    'ctrlKey',
+    'metaKey',
+    'shiftKey',
+    /* MouseEventInit */
+    'button',
+    'buttons',
+    'clientX',
+    'clientY',
+    'movementX',
+    'movementY',
+    'relatedTarget',
+    'screenX',
+    'screenY'
+];
+/**
+ * Copies and returns `MouseEventInit` properties from an existing `MouseEvent`.
+ * @param e
+ * @param overrides
+ */
+function eventInit(e, overrides = {}) {
+    const init = {};
+    EVENTINIT_KEYS.forEach(key => {
+        init[key] = e[key];
+    });
+    return Object.assign(init, overrides);
+}
+/**
+ * Constructs and dispatches a custom `MouseEvent` with property `shftTarget` set to `element`.
+ * @param element
+ * @param typeArg
+ * @param options
+ * @returns The constructed event.
+ */
+function dispatch(element, typeArg, options = {}) {
+    const ev = new MouseEvent(typeArg, options);
+    ev.shftTarget = element;
+    element.dispatchEvent(ev);
+    return ev;
+}
+
+const { drags, drops } = _GLOBAL;
+function clamp(value, min = 0, max = 1) {
+    return Math.max(min, Math.min(value, max));
+}
+function matches(el, selectors) {
+    if (!selectors)
+        return true;
+    if (typeof selectors === 'string')
+        selectors = [selectors];
+    if (!(selectors instanceof Array))
+        return false;
+    return selectors.some(selector => el.matches(selector));
+}
+function overlapPct(el, other) {
+    const { left: l, right: r, top: t, bottom: b, height: h, width: w } = el.getBoundingClientRect();
+    const { left: otherL, right: otherR, top: otherT, bottom: otherB } = other.getBoundingClientRect();
+    const overlapW = clamp(Math.min(r, otherR) - Math.max(l, otherL), 0, w);
+    const overlapH = clamp(Math.min(b, otherB) - Math.max(t, otherT), 0, h);
+    return (overlapW * overlapH) / (w * h);
+}
+function is(el, type) {
+    const { drags, drops } = _GLOBAL;
+    switch (type) {
+        case 'drag':
+        case 'draggable':
+            return drags.has(el);
+        case 'drop':
+        case 'droppable':
+            return drops.has(el);
+        default:
+            return drags.has(el) || drops.has(el);
+    }
+}
+function clear(el) {
+    const { drags, drops } = _GLOBAL;
+    if (drags.has(el)) {
+        const { onmousedown, onmousemove, onmouseup } = drags.get(el);
+        el.removeEventListener('mousedown', onmousedown);
+        document.removeEventListener('mousemove', onmousemove);
+        document.removeEventListener('mouseup', onmouseup);
+    }
+    if (drops.has(el)) {
+        const { ondragstart, ondrag, ondragend } = drops.get(el);
+        document.removeEventListener('dragstart', ondragstart);
+        document.removeEventListener('drag', ondrag);
+        document.removeEventListener('dragend', ondragend);
+    }
+}
+function canDrop(droppable, dragged) {
+    const { accepts, overlap } = drops.get(droppable);
+    return (matches(dragged, accepts) && overlapPct(dragged, droppable) > overlap);
+}
+
+const { drags: drags$1 } = _GLOBAL;
+function drag(el) {
+    if (is(el, 'drag'))
+        return;
+    const data = {
+        onmousedown: _mousedownFn(el),
+        onmousemove: _mousemoveFn(el),
+        onmouseup: _mouseupFn(el)
+    };
+    el.addEventListener('mousedown', data.onmousedown);
+    drags$1.set(el, data);
+}
+function _mousedownFn(el) {
+    return (e) => {
+        const { onmousemove, onmouseup } = drags$1.get(el);
+        if (e.buttons === 1) {
+            dispatch(el, 'dragstart', eventInit(e));
+            document.addEventListener('mousemove', onmousemove);
+            document.addEventListener('mouseup', onmouseup, {
+                once: true
+            });
+        }
+    };
+}
+function _mousemoveFn(el) {
+    return (e) => {
+        dispatch(el, 'drag', eventInit(e));
+    };
+}
+function _mouseupFn(el) {
+    return (e) => {
+        const { onmousemove } = drags$1.get(el);
+        dispatch(el, 'dragend', eventInit(e));
+        document.removeEventListener('mousemove', onmousemove);
+    };
+}
+
+const { drops: drops$1 } = _GLOBAL;
+function drop(el, options) {
+    if (is(el, 'drop'))
+        return;
+    const { accepts, overlap } = Object.assign({ accepts: null, overlap: 0.5 }, options || {});
+    const data = {
+        content: new WeakSet(),
+        ondragstart: _dragstartFn(el),
+        ondrag: _dragFn(el),
+        ondragend: _dragendFn(el),
+        accepts,
+        overlap
+    };
+    document.addEventListener('dragstart', data.ondragstart);
+    drops$1.set(el, data);
+}
+function _dragstartFn(el) {
+    return (e) => {
+        if (!drops$1.has(el))
+            return;
+        const dragged = e.shftTarget;
+        const { accepts, ondrag, ondragend } = drops$1.get(el);
+        if (matches(dragged, accepts)) {
+            dispatch(el, 'dropopen', { relatedTarget: dragged });
+            dragged.addEventListener('drag', ondrag);
+            dragged.addEventListener('dragend', ondragend, { once: true });
+        }
+    };
+}
+function _dragFn(el) {
+    return (e) => {
+        const dragged = e.shftTarget;
+        const { accepts, content } = drops$1.get(el);
+        if (matches(dragged, accepts)) {
+            if (canDrop(el, dragged)) {
+                if (!content.has(dragged)) {
+                    content.add(dragged);
+                    dispatch(el, 'dragenter', eventInit(e, { relatedTarget: dragged }));
+                }
+                dispatch(el, 'dragover', eventInit(e, { relatedTarget: dragged }));
+            }
+            else {
+                if (content.has(dragged)) {
+                    content.delete(dragged);
+                    dispatch(el, 'dragleave', eventInit(e, { relatedTarget: dragged }));
+                }
+            }
+        }
+    };
+}
+function _dragendFn(el) {
+    return (e) => {
+        const dragged = e.shftTarget;
+        const { ondrag } = drops$1.get(el);
+        dispatch(el, 'dropclose', eventInit(e, { relatedTarget: dragged }));
+        dragged.removeEventListener('drag', ondrag);
+        if (canDrop(el, dragged)) {
+            dispatch(el, 'drop', eventInit(e, { relatedTarget: dragged }));
+        }
+    };
+}
+
+function defaultmove(e) {
+    const el = e.target;
+    if (!['absolute', 'relative'].some(pos => pos === el.style.position))
+        el.style.position = 'relative';
+    ['left', 'top'].forEach(axis => {
+        let pos = parseFloat(el.style[axis]) || 0;
+        pos += axis === 'left' ? e.movementX : e.movementY;
+        el.style[axis] = `${pos}px`;
+    });
+}
+var shft = {
+    drag,
+    drop,
+    util: { clear, defaultmove, is, matches },
+    _GLOBAL
+};
+
+export default shft;

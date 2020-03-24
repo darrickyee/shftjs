@@ -1,11 +1,11 @@
 import { drag } from './drag';
 import { drop } from './drop';
 import { is, matches, clear } from './util';
-import { _GLOBAL, DragData, DropData } from './core';
+import { _GLOBAL } from './core';
 
 function defaultmove(e: MouseEvent): void {
     const el = e.target as HTMLElement;
-    if (!['absolute', 'relative'].includes(el.style.position))
+    if (!['absolute', 'relative'].some(pos => pos === el.style.position))
         el.style.position = 'relative';
 
     ['left', 'top'].forEach(axis => {

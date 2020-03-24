@@ -1,7 +1,6 @@
 import { drag } from './drag';
 import { drop } from './drop';
 import { is, matches, clear } from './util';
-import { DragData, DropData } from './core';
 declare function defaultmove(e: MouseEvent): void;
 declare const _default: {
     drag: typeof drag;
@@ -13,8 +12,8 @@ declare const _default: {
         matches: typeof matches;
     };
     _GLOBAL: {
-        drags: WeakMap<Element, DragData>;
-        drops: WeakMap<Element, DropData>;
+        drags: WeakMap<Element, import("./core").DragData>;
+        drops: WeakMap<Element, import("./core").DropData>;
     };
 };
 export default _default;
