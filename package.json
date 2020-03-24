@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "description": "Minimal library for drag and drop operations.",
     "main": "./index.js",
-    "module": "./index.min.js",
+    "module": "./index.js",
     "scripts": {
         "build": "tsc && rollup -c"
     },
