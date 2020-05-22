@@ -6,16 +6,16 @@ export default [
         input: './src/shft.js',
         output: {
             file: 'index.js',
-            format: 'module'
+            format: 'module',
         },
-        plugins: [resolve()]
+        plugins: [resolve()],
     },
     {
         input: './src/shft.d.ts',
         output: {
             file: 'index.d.ts',
-            format: 'module'
+            format: 'module',
         },
-        plugins: [dts()]
-    }
+        plugins: [dts()],
+    },
 ];

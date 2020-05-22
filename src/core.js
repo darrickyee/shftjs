@@ -1,11 +1,11 @@
 export const _GLOBAL = (function _init(obj) {
-    const data = obj._SHFTJS || {};
+    const data = obj['_SHFTJS'] || {};
     ['drags', 'drops'].forEach(type => {
         if (!data[type])
             data[type] = new WeakMap();
     });
-    return (obj._SHFTJS = data);
-})(global);
+    return (obj['_SHFTJS'] = data);
+})(window);
 const EVENTINIT_KEYS = [
     /* EventInit */
     'bubbles',
@@ -28,7 +28,7 @@ const EVENTINIT_KEYS = [
     'movementY',
     'relatedTarget',
     'screenX',
-    'screenY'
+    'screenY',
 ];
 /**
  * Copies and returns `MouseEventInit` properties from an existing `MouseEvent`.
