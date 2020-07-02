@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script src="./shft.js"></script>
+    </head>
+    <body>
+        <style>
+            #dragme[is-dragging],
+            .test-drag[is-dragging] {
+                outline: 2px solid red;
+            }
+
+            #dragme:hover {
+                background-color: rebeccapurple;
+            }
+
+            #dragme,
+            .test-drag {
+                background-color: aqua;
+                position: relative;
+                height: 3em;
+                width: 3em;
+            }
+
+            .test-drop {
+                border: 2px solid black;
+                background-color: transparent;
+                position: absolute;
+                height: 4em;
+                width: 4em;
+            }
+
+            .test-drop[drop-open] {
+                border-color: purple;
+            }
+
+            .test-drop[drop-over] {
+                background-color: beige;
+            }
+        </style>
+        <div id="dropzone" class="test-drop"></div>
+
+        <div id="dragme"></div>
+        <script>
+            const d = document.querySelector('#dragme');
+            const dz1 = document.querySelector('#dropzone');
+            shftjs.drag(d);
+            shftjs.drop(dz1);
+            d.addEventListener('drag', shftjs.util.defaultmove);
+
+            function addDrags(n) {
+                for (let i = 0; i < n; i++) {
+                    let newdiv = document.createElement('div');
+                    newdiv.classList.add('test-drag');
+                    document.body.append(newdiv);
+                    shftjs.drag(newdiv);
+                }
+            }
+
+            function addDrops(n) {
+                for (let i = 0; i < n; i++) {
+                    let newdiv = document.createElement('div');
+                    newdiv.classList.add('test-drop');
+                    document.body.append(newdiv);
+                    shftjs.drop(newdiv);
+                    [
+                        'dropopen',
+                        'dropclose',
+                        'dropenter',
+                        'dropleave',
+                        'dropover',
+                        'drop',
+                    ].forEach(ev => {
+                        newdiv.addEventListener(ev, () => console.log(`${ev}`));
+                    });
+                }
+            }
+
+            function removeDrags() {
+                document
+                    .querySelectorAll('.test-drag')
+                    .forEach(el => el.remove());
+            }
+
+            function removeDrops() {
+                document
+                    .querySelectorAll('.test-drop')
+                    .forEach(el => el.remove());
+            }
+        </script>
+    </body>
+</html>

@@ -1,5 +1,5 @@
 declare type ShftJsData = {
-    drags: WeakMap<Element, DragData>;
+    drags: WeakMap<Element, any>;
     drops: WeakMap<Element, DropData>;
 };
 export interface DragData {

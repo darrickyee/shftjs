@@ -1,39 +1,37 @@
-import { _GLOBAL, eventInit, dispatch } from './core';
-import { is } from './util';
-const { drags } = _GLOBAL;
-export function drag(el) {
-    if (is(el, 'drag'))
-        return;
-    const data = {
-        onmousedown: _mousedownFn(el),
-        onmousemove: _mousemoveFn(el),
-        onmouseup: _mouseupFn(el)
-    };
-    el.addEventListener('mousedown', data.onmousedown);
-    drags.set(el, data);
-}
-function _mousedownFn(el) {
-    return (e) => {
-        const { onmousemove, onmouseup } = drags.get(el);
+import { eventInit, dispatch } from './core';
+import { listen } from './util';
+const DRAGS = new WeakMap();
+export const drag = (el) => {
+    if (el instanceof Element && !DRAGS.has(el)) {
+        const listener = new DragListener(el);
+        el.addEventListener('mousedown', listener);
+        DRAGS.set(el, listener);
+    }
+    return el;
+};
+export const isDrag = (el) => DRAGS.has(el);
+export const undrag = (el) => {
+    el.removeEventListener('mousedown', DRAGS.get(el));
+    DRAGS.delete(el);
+};
+Object.assign(window, { isDrag, undrag });
+class DragListener {
+    constructor(el) {
+        this.el = el;
+    }
+    handleEvent(e) {
         if (e.buttons === 1) {
-            dispatch(el, 'dragstart', eventInit(e));
-            document.addEventListener('mousemove', onmousemove);
-            document.addEventListener('mouseup', onmouseup, {
-                once: true
+            dispatch(this.el, 'dragstart', eventInit(e));
+            this.el.setAttribute('is-dragging', '');
+            const remove = listen(document, 'mousemove', e => {
+                dispatch(this.el, 'drag', eventInit(e));
             });
+            document.addEventListener('mouseup', e => {
+                remove();
+                this.el.removeAttribute('is-dragging');
+                dispatch(this.el, 'dragend', eventInit(e));
+            }, { once: true });
         }
-    };
-}
-function _mousemoveFn(el) {
-    return (e) => {
-        dispatch(el, 'drag', eventInit(e));
-    };
-}
-function _mouseupFn(el) {
-    return (e) => {
-        const { onmousemove } = drags.get(el);
-        dispatch(el, 'dragend', eventInit(e));
-        document.removeEventListener('mousemove', onmousemove);
-    };
+    }
 }
 //# sourceMappingURL=drag.js.map

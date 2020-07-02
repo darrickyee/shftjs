@@ -1,89 +1,136 @@
-import { _GLOBAL, eventInit, DropData, ShftEvent, dispatch } from './core';
-import { is, matches, canDrop } from './util';
+import { eventInit, ShftEvent, dispatch } from './core';
+import { listen, overlapPct } from './util';
 
-const { drops } = _GLOBAL;
+/**
+ * Add as listener to draggable's `dragstart` event
+ * @param el Droppable that will react to draggable
+ */
+class DropListener {
+    el: Element;
+    remove: () => void;
+    dropover: boolean;
 
-export function drop(el, options?: { accepts?: string; overlap?: number }) {
-    if (is(el, 'drop')) return;
+    constructor(el: Element) {
+        this.el = el;
+        this.remove = () => {};
+        this.dropover = false;
+    }
 
-    const { accepts, overlap } = Object.assign(
-        { accepts: null, overlap: 0.5 },
-        options || {}
+    get accepts() {
+        return this.el.getAttribute('drop-accepts') || '';
+    }
+
+    get overlap() {
+        return parseFloat(this.el.getAttribute('drop-overlap')) || 0.5;
+    }
+
+    canAccept(draggable: Element) {
+        return this.accepts ? draggable.matches(this.accepts) : true;
+    }
+
+    canDrop(draggable: Element) {
+        return overlapPct(draggable, this.el) >= this.overlap;
+    }
+
+    handleEvent({ detail: { shftTarget } }: CustomEvent) {
+        if (shftTarget && this.canAccept(shftTarget)) {
+            // Set drop to open
+            dispatch(this.el, 'dropopen', { relatedTarget: shftTarget });
+            this.el.setAttribute('drop-open', '');
+
+            // Listen for drag events
+            this.remove = listen(
+                shftTarget,
+                'drag',
+                this.dragListener.bind(this)
+            );
+            shftTarget.addEventListener(
+                'dragend',
+                this.dragEndListener.bind(this),
+                {
+                    once: true,
+                }
+            );
+        }
+    }
+
+    dragListener({ shftTarget }: ShftEvent) {
+        const dropover = this.canDrop(shftTarget);
+
+        if (dropover !== this.dropover) {
+            [shftTarget, this.el].forEach((el, i, els) => {
+                dispatch(el, dropover ? 'dragenter' : 'dragleave', {
+                    relatedTarget: els[1 - i],
+                });
+            });
+
+            const attrFn = dropover ? 'setAttribute' : 'removeAttribute';
+            this.el[attrFn]('drop-over', '');
+
+            this.dropover = dropover;
+        }
+
+        if (dropover) {
+            [shftTarget, this.el].forEach((el, i, els) => {
+                dispatch(el, 'dragover', { relatedTarget: els[1 - i] });
+            });
+        }
+    }
+
+    dragEndListener({ shftTarget }: ShftEvent) {
+        this.remove();
+        this.remove = () => {};
+
+        this.el.removeAttribute('drop-open');
+        this.el.removeAttribute('drop-over');
+
+        dispatch(this.el, 'drop-close', { relatedTarget: shftTarget });
+        if (this.canDrop(shftTarget)) {
+            [shftTarget, this.el].forEach((el, i, els) => {
+                dispatch(el, 'drop', { relatedTarget: els[1 - i] });
+            });
+        }
+    }
+}
+
+let DROPS: Element[] = [];
+
+const listener = ({ shftTarget }: ShftEvent) => {
+    DROPS = DROPS.filter(el => el.isConnected);
+    DROPS.forEach(el => {
+        el.dispatchEvent(
+            new CustomEvent('_dragstart', { detail: { shftTarget } })
+        );
+    });
+};
+
+export const isDrop = (el: Element) => DROPS.includes(el);
+
+export const undrop = (el: Element) => {
+    DROPS = DROPS.filter(
+        droppable => droppable.isConnected && el !== droppable
     );
+};
 
-    const data: DropData = {
-        content: new WeakSet(),
-        ondragstart: _dragstartFn(el),
-        ondrag: _dragFn(el),
-        ondragend: _dragendFn(el),
-        accepts,
-        overlap
-    };
+Object.assign(window, { DROPS });
 
-    document.addEventListener('dragstart', data.ondragstart);
-    drops.set(el, data);
-}
+export function drop(
+    el: Element,
+    options = {
+        accepts: '',
+        overlap: 0.5,
+    }
+) {
+    if (el instanceof Element && !isDrop(el)) {
+        ['accepts', 'overlap'].forEach(opt => {
+            el.setAttribute(`drop-${opt}`, options[opt]);
+        });
 
-function _dragstartFn(el: Element) {
-    return (e: ShftEvent) => {
-        if (!drops.has(el)) return;
+        el.addEventListener('_dragstart', new DropListener(el));
+        document.addEventListener('dragstart', listener);
 
-        const dragged = e.shftTarget;
-        const { accepts, ondrag, ondragend } = drops.get(el);
+        DROPS = [...DROPS.filter(droppable => droppable.isConnected), el];
+    }
 
-        if (matches(dragged, accepts)) {
-            dispatch(el, 'dropopen', { relatedTarget: dragged });
-            dragged.addEventListener('drag', ondrag);
-            dragged.addEventListener('dragend', ondragend, { once: true });
-        }
-    };
-}
-
-function _dragFn(el: Element) {
-    return (e: ShftEvent) => {
-        const dragged = e.shftTarget;
-        const { accepts, content } = drops.get(el);
-
-        if (matches(dragged, accepts)) {
-            if (canDrop(el, dragged)) {
-                if (!content.has(dragged)) {
-                    content.add(dragged);
-                    dispatch(
-                        el,
-                        'dragenter',
-                        eventInit(e, { relatedTarget: dragged })
-                    );
-                }
-
-                dispatch(
-                    el,
-                    'dragover',
-                    eventInit(e, { relatedTarget: dragged })
-                );
-            } else {
-                if (content.has(dragged)) {
-                    content.delete(dragged);
-                    dispatch(
-                        el,
-                        'dragleave',
-                        eventInit(e, { relatedTarget: dragged })
-                    );
-                }
-            }
-        }
-    };
-}
-
-function _dragendFn(el: Element) {
-    return (e: ShftEvent) => {
-        const dragged = e.shftTarget;
-        const { ondrag } = drops.get(el);
-
-        dispatch(el, 'dropclose', eventInit(e, { relatedTarget: dragged }));
-        dragged.removeEventListener('drag', ondrag);
-
-        if (canDrop(el, dragged)) {
-            dispatch(el, 'drop', eventInit(e, { relatedTarget: dragged }));
-        }
-    };
+    return el;
 }

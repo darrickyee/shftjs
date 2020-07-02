@@ -2,12 +2,24 @@ import { _GLOBAL } from './core';
 
 const { drags, drops } = _GLOBAL;
 
+export const listen = (
+    el: EventTarget,
+    eventType: string,
+    listener: EventListenerOrEventListenerObject,
+    options?: boolean | AddEventListenerOptions
+) => {
+    el.addEventListener(eventType, listener, options || {});
+    return () => {
+        el.removeEventListener(eventType, listener, options || {});
+    };
+};
+
 export function clamp(value: number, min = 0, max = 1) {
     return Math.max(min, Math.min(value, max));
 }
 
-export function matches(el: Element, selectors?: string | string[]) {
-    if (!selectors) return true;
+export function matches(el: Element, selectors: string | string[]) {
+    if (!selectors || selectors.length === 0) return true;
 
     if (typeof selectors === 'string') selectors = [selectors];
 
@@ -16,24 +28,39 @@ export function matches(el: Element, selectors?: string | string[]) {
     return selectors.some(selector => el.matches(selector));
 }
 
-export function overlapPct(el: Element, other: Element) {
+/**
+ * Returns the proportion of `el` that overlaps with `other`.
+ *
+ * @param A
+ * @param B
+ */
+export function overlapPct(A: Element, B: Element) {
+    if (!(A.getBoundingClientRect && B.getBoundingClientRect)) return 0;
     const {
         left: l,
         right: r,
         top: t,
         bottom: b,
         height: h,
-        width: w
-    } = el.getBoundingClientRect();
+        width: w,
+    } = A.getBoundingClientRect();
     const {
         left: otherL,
         right: otherR,
         top: otherT,
-        bottom: otherB
-    } = other.getBoundingClientRect();
+        bottom: otherB,
+    } = B.getBoundingClientRect();
     const overlapW = clamp(Math.min(r, otherR) - Math.max(l, otherL), 0, w);
     const overlapH = clamp(Math.min(b, otherB) - Math.max(t, otherT), 0, h);
     return (overlapW * overlapH) / (w * h);
+}
+
+export function overlapPx(A: Element, B: Element) {
+    if (A && B && [A, B].every(el => el.getBoundingClientRect)) {
+        
+    }
+
+
 }
 
 export function is(
@@ -74,7 +101,9 @@ export function clear(el) {
 }
 
 export function canDrop(droppable: Element, dragged: Element) {
-    const { accepts, overlap } = drops.get(droppable);
+    const accepts = dragged.getAttribute('drop-accepts') || '';
+    const overlap = parseFloat(dragged.getAttribute('drop-overlap')) || 0.5;
+
     return (
         matches(dragged, accepts) && overlapPct(dragged, droppable) > overlap
     );

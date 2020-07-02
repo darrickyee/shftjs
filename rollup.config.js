@@ -11,6 +11,15 @@ export default [
         plugins: [resolve()],
     },
     {
+        input: './src/shft.js',
+        output: {
+            file: 'shft.js',
+            format: 'iife',
+            name: 'shftjs',
+        },
+        plugins: [resolve()],
+    },
+    {
         input: './src/shft.d.ts',
         output: {
             file: 'index.d.ts',
