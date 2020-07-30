@@ -10,10 +10,10 @@
     "author": "",
     "license": "MIT",
     "devDependencies": {
-        "@rollup/plugin-node-resolve": "^8.1.0",
-        "rollup": "^2.21.0",
-        "rollup-plugin-dts": "^1.4.7",
-        "typescript": "^3.9.6"
+        "@rollup/plugin-node-resolve": "^8.4.0",
+        "rollup": "^2.23.0",
+        "rollup-plugin-dts": "^1.4.9",
+        "typescript": "^3.9.7"
     },
     "repository": {
         "type": "git",
