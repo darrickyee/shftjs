@@ -10,9 +10,9 @@
     "author": "",
     "license": "MIT",
     "devDependencies": {
-        "@rollup/plugin-node-resolve": "^8.4.0",
-        "rollup": "^2.23.0",
-        "rollup-plugin-dts": "^1.4.9",
+        "@rollup/plugin-node-resolve": "^9.0.0",
+        "rollup": "^2.26.0",
+        "rollup-plugin-dts": "^1.4.10",
         "typescript": "^3.9.7"
     },
     "repository": {
@@ -25,7 +25,6 @@
     "homepage": "https://github.com/darrickyee/shftjs#readme",
     "types": "index.d.ts",
     "dependencies": {
-        "hybrids": "^4.2.1",
         "lit-html": "^1.2.1"
     }
 }
